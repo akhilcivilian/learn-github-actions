@@ -27,14 +27,14 @@ jobs:
       - name: Send email notification via Outlook SMTP
         uses: dawidd6/action-send-mail@v3
         with:
-          server_address: smtp-mail.outlook.com
+          server_address: smtp.gmail.com
           server_port:  587
           secure: false #the connection upgrades to encrypted mid handshake unlike P465
-          username: ${{ secrets.OUTLOOK_EMAIL }}
-          password: ${{ secrets.OUTLOOK_PASSWORD  }}
+          username: ${{ secrets.SMTP_EMAIL }}
+          password: ${{ secrets.SMTP_PASSWORD  }}
           subject:  "New PR: ${{  github.event.pull_request.title }}"
           to: ${{ secrets.OWNER_EMAIL }}
-          from: ${{ secrets.OUTLOOK_EMAIL }}
+          from: ${{ secrets.SMTP_EMAIL }}
           body: |
             A new Pull request has been opened!
 
