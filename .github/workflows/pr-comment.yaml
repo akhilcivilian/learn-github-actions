@@ -1,4 +1,4 @@
-name: PR comment
+name: PR comment and notify
 
 on:
   pull_request:
@@ -21,5 +21,26 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'Thanks for opening this PR! Automated review pipeline triggered.'
+              body: 'PR opened at ${{ github.event.pull_request.created_at  }} .Thanks for opening this PR! Automated review pipeline triggered.'
             })
+
+      - name: Send email notification via Outlook SMTP
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp-mail.outlook.com
+          server_port:  587
+          secure: false #the connection upgrades to encrypted mid handshake unlike P465
+          username: ${{ secrets.OUTLOOK_EMAIL }}
+          password: ${{ secrets.OUTLOOK_PASSWORD  }}
+          subject:  "New PR: ${{  github.event.pull_request.title }}"
+          to: ${{ secrets.OWNER_EMAIL }}
+          from: ${{ secrets.OUTLOOK_EMAIL }}
+          body: |
+            A new Pull request has been opened!
+
+            Title   : ${{ github.event.pull_request.title }}
+            Author  : ${{ github.event.pull_request.user.login }}
+            Branch  : ${{ github.head_ref }} -> {{ github.base_ref }}
+            URL     : ${{ github.event.pull_request.html_url  }}
+
+            Opened at : ${{ github.event.pull_request.created_at  }}
