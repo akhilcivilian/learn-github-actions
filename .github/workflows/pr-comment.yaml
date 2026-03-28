@@ -29,18 +29,18 @@ jobs:
         with:
           server_address: smtp.gmail.com
           server_port:  587
-          secure: false #the connection upgrades to encrypted mid handshake unlike P465
+          secure: false #587 and false makes the connection upgrade to encrypted mid handshake unlike P465 which encrypts from start
           username: ${{ secrets.SMTP_EMAIL }}
           password: ${{ secrets.SMTP_PASSWORD  }}
           subject:  "New PR: ${{  github.event.pull_request.title }}"
-          to: ${{ secrets.OWNER_EMAIL }}
           from: ${{ secrets.SMTP_EMAIL }}
+          to: ${{ vars.OWNER_EMAIL }}
           body: |
             A new Pull request has been opened!
 
             Title   : ${{ github.event.pull_request.title }}
             Author  : ${{ github.event.pull_request.user.login }}
-            Branch  : ${{ github.head_ref }} -> {{ github.base_ref }}
+            Branch  : ${{ github.head_ref }} -> ${{ github.base_ref }}
             URL     : ${{ github.event.pull_request.html_url  }}
 
             Opened at : ${{ github.event.pull_request.created_at  }}
